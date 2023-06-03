@@ -3,10 +3,17 @@ import PropTypes from 'prop-types';
 import { Button, Description, List, ListItem } from './List.Contacts.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeContact } from 'redux/ContactsSlice';
+import { useEffect } from 'react';
+import { fetchContacts } from '../../../redux/operations';
 
 const ListContacts = () => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+  console.log(fetchContacts);
   const contacts = useSelector(state => state.contacts.contacts);
+  console.log(contacts);
   const filter = useSelector(state => state.filter);
 
   const filteredContacts = contacts.filter(contact =>

@@ -1,39 +1,50 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
+import { fetchContacts } from './operations';
 
 const initialState = {
-  contacts: [
-    { id: `${nanoid()}`, name: 'Rosie Simpson', number: '459-12-56' },
-    { id: `${nanoid()}`, name: 'Hermione Kline', number: '443-89-12' },
-    { id: `${nanoid()}`, name: 'Eden Clements', number: '645-17-79' },
-    { id: `${nanoid()}`, name: 'Annie Copeland', number: '227-91-26' },
-  ],
+  contacts: [],
+  isLoading: false,
+  error: null,
 };
-console.log(initialState);
 
 export const contactsSlice = createSlice({
   name: 'contact',
   initialState,
-  reducers: {
-    removeContact: (state, action) => {
-      const index = state.contacts.findIndex(
-        contact => contact.id === action.payload
-      );
-      state.contacts.splice(index, 1);
+  // reducers: {
+  //   removeContact: (state, action) => {
+  //     const index = state.contacts.findIndex(
+  //       contact => contact.id === action.payload
+  //     );
+  //     state.contacts.splice(index, 1);
+  //   },
+  //   addContacts: {
+  //     reducer: (state, action) => {
+  //       state.contacts.push({ ...action.payload });
+  //     },
+  //     prepare(name, number) {
+  //       return {
+  //         payload: {
+  //           id: nanoid(),
+  //           name,
+  //           number,
+  //         },
+  //       };
+  //     },
+  //   },
+  // },
+  extraReducers: {
+    [fetchContacts.pending]: (state, action) => {
+      state.isLoading = true;
     },
-    addContacts: {
-      reducer: (state, action) => {
-        state.contacts.push({ ...action.payload });
-      },
-      prepare(name, number) {
-        return {
-          payload: {
-            id: nanoid(),
-            name,
-            number,
-          },
-        };
-      },
+    [fetchContacts.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.contacts = action.payload;
+    },
+    [fetchContacts.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
     },
   },
 });
