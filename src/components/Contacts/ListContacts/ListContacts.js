@@ -5,16 +5,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeContact } from 'redux/ContactsSlice';
 import { useEffect } from 'react';
 import { fetchContacts } from '../../../redux/operations';
+import { getConctacs, getFilter, getLoading } from 'redux/Selectors';
 
 const ListContacts = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
-  console.log(fetchContacts);
-  const contacts = useSelector(state => state.contacts.contacts);
-  console.log(contacts);
-  const filter = useSelector(state => state.filter);
+  const contacts = useSelector(getConctacs);
+  const filter = useSelector(getFilter);
+  const isLoading = useSelector(getLoading);
 
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
@@ -22,6 +22,7 @@ const ListContacts = () => {
 
   return (
     <List>
+      {isLoading && <b>Loading contacts...</b>}
       {filteredContacts.map(({ id, name, number }) => (
         <ListItem key={id}>
           <Description>
