@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { Button, Form, Input, Label } from './Form.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContacts } from 'redux/ContactsSlice';
+import { addContacts } from '../../../redux/operations';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
@@ -25,7 +25,7 @@ export default function ContactForm() {
     if (contacts.some(contact => contact.name === name)) {
       return alert(`${contacts.name} is already in contacts`);
     } else {
-      dispatch(addContacts(name, number));
+      dispatch(addContacts({name, number}));
     }
 
     setName('');
@@ -66,5 +66,3 @@ export default function ContactForm() {
     </Form>
   );
 }
-
-
